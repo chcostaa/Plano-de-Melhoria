@@ -6,7 +6,7 @@
 
         INSERT INTO Users (nome, email, senha) VALUES ($nome, $email, $senha);
     */
-
+    session_start();
     function Database () {
         $servername = "localhost";
         $database = "Cadastro";
@@ -18,9 +18,9 @@
     }
     $banco = Database();
 
-    $email = $_POST['email'];
-    $senha = $_POST['password'];
-    $nome = $_POST['nome'];
+    $email = $_POST['email_cad'];
+    $senha = $_POST['senha_cad'];
+    $nome = $_POST['nome_cad'];
 
     $sql = "INSERT INTO Users(email, nome, senha) VALUES ('$email', '$nome', '$senha');";
     $result = $banco->query($sql);
