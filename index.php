@@ -1,27 +1,42 @@
 <?php
-    /*
-        CREATE DATABASE Cadastro;
 
-        CREATE TABLE Users (id INT AUTO_INCREMENT, nome VARCHAR(255), email VARCHAR(255), senha VARCHAR(255));
+$username = 'root';
+$password = 'COLOQUE_SUA_SENHA_AQUI';
 
-        INSERT INTO Users (nome, email, senha) VALUES ($nome, $email, $senha);
-    */
-    session_start();
-    function Database () {
-        $servername = "localhost";
-        $database = "Cadastro";
-        $username = "root";
-        $password = "sua_senha_aqui";
 
-        $conn = new mysqli($servername, $username, $password, $database);
-        return $conn;
-    }
-    $banco = Database();
+$conn = new PDO('mysql:host=localhost;dbname=meuBancoDeDados', $username, $password);
+$conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-    $email = $_POST['email_cad'];
-    $senha = $_POST['senha_cad'];
-    $nome = $_POST['nome_cad'];
+//Mostra todos os usuários do sexo masculino
+$sexo_atual = 'masculino';
+$data = $conn->query('SELECT * FROM Users WHERE sexo = ' . $conn->quote($sexo_atual));
+foreach($data as $row) {
+    print_r($row);
+}
 
-    $sql = "INSERT INTO Users(email, nome, senha) VALUES ('$email', '$nome', '$senha');";
-    $result = $banco->query($sql);
-?>
+//Mostra todos os usuários do sexo feminino
+$sexo_atual = 'feminino';
+$data =	$conn->query('SELECT * FROM Users WHERE sexo = ' . $conn->quote($sexo_atual));
+foreach($data as $row) {
+    print_r($row);
+}
+
+//Mostra média de idades de todos os usuários
+$data = $conn->query('SELECT AVG(idade) FROM Users');
+print_r($data);
+
+
+//Mostra informações completas de um usuário, que será passado via requisição POST
+//usando o parâmetro 'user'.
+//   http://appsite.com/analise.php?user=^NOME_DO_USUARIO^
+$usuario = $_POST['user'];
+$data = $conn->query('SELECT * FROM Users WHERE name = ' . $conn->quote($usuario));
+foreach($data as $row) {
+    print_r($row);
+}
+
+//Mostra quantidade total de usuários cadastrados
+$data = $conn->query('SELECT * FROM Users');
+$quantidade_total = mysql_num_rows($data);
+
+echo "$quantidade_total usuários cadastrados no banco.\n";
